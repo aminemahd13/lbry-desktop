@@ -6,6 +6,7 @@ import React from 'react';
 import Button from 'component/button';
 import classnames from 'classnames';
 import NotificationBubble from 'component/notificationBubble';
+import { EXTRA_SIDEBAR_LINKS } from 'homepage';
 // @if TARGET='app'
 import { IS_MAC } from 'component/app/view';
 // @endif
@@ -24,6 +25,35 @@ const RECENT_FROM_FOLLOWING = {
   navigate: `/$/${PAGES.CHANNELS_FOLLOWING}`,
   icon: ICONS.SUBSCRIBE,
 };
+
+const TOP_LEVEL_LINKS: Array<{
+  label: string,
+  navigate: string,
+  icon: string,
+  extra?: Node,
+  hideForUnauth?: boolean,
+}> = [
+  HOME,
+  RECENT_FROM_FOLLOWING,
+  {
+    label: 'Your Tags',
+    navigate: `/$/${PAGES.TAGS_FOLLOWING}`,
+    icon: ICONS.TAG,
+    hideForUnauth: true,
+  },
+  {
+    label: 'Discover',
+    navigate: `/$/${PAGES.DISCOVER}`,
+    icon: ICONS.DISCOVER,
+  },
+  {
+    label: 'Purchased',
+    navigate: `/$/${PAGES.LIBRARY}`,
+    icon: ICONS.PURCHASED,
+    hideForUnauth: true,
+  },
+];
+const ODYSEE_LINKS = [HOME, ...EXTRA_SIDEBAR_LINKS, RECENT_FROM_FOLLOWING];
 
 type Props = {
   subscriptions: Array<Subscription>,
@@ -54,34 +84,6 @@ function SideNavigation(props: Props) {
     unreadCount,
     user,
   } = props;
-
-  const TOP_LEVEL_LINKS: Array<{
-    label: string,
-    navigate: string,
-    icon: string,
-    extra?: Node,
-    hideForUnauth?: boolean,
-  }> = [
-    HOME,
-    RECENT_FROM_FOLLOWING,
-    {
-      label: 'Your Tags',
-      navigate: `/$/${PAGES.TAGS_FOLLOWING}`,
-      icon: ICONS.TAG,
-      hideForUnauth: true,
-    },
-    {
-      label: 'Discover',
-      navigate: `/$/${PAGES.DISCOVER}`,
-      icon: ICONS.DISCOVER,
-    },
-    {
-      label: IS_WEB ? 'Purchased' : 'Library',
-      navigate: `/$/${PAGES.LIBRARY}`,
-      icon: ICONS.PURCHASED,
-      hideForUnauth: true,
-    },
-  ];
 
   const ABSOLUTE_LINKS: Array<{
     label: string,
@@ -240,6 +242,26 @@ function SideNavigation(props: Props) {
     return () => window.removeEventListener('keydown', handleKeydown);
   }, [sidebarOpen, setSidebarOpen, isAbsolute]);
 
+  const helpLinks = (
+    <ul className="navigation__tertiary navigation-links--small">
+      <li className="navigation-link">
+        <Button label={__('About')} href="https://lbry.com/about" />
+      </li>
+      <li className="navigation-link">
+        <Button label={__('FAQ')} href="https://lbry.com/faq" />
+      </li>
+      <li className="navigation-link">
+        <Button label={__('Support')} href="https://lbry.com/support" />
+      </li>
+      <li className="navigation-link">
+        <Button label={__('Terms')} href="https://lbry.com/tos" />
+      </li>
+      <li className="navigation-link">
+        <Button label={__('Privacy Policy')} href="https://lbry.com/privacy" />
+      </li>
+    </ul>
+  );
+
   return (
     <div
       className={classnames('navigation__wrapper', {
@@ -257,12 +279,13 @@ function SideNavigation(props: Props) {
           })}
         >
           <ul className={classnames('navigation-links', { 'navigation-links--micro': !sidebarOpen })}>
-            {TOP_LEVEL_LINKS.map(linkProps =>
+            {ODYSEE_LINKS.map(linkProps =>
               !email && linkProps.hideForUnauth && IS_WEB ? null : (
                 <li key={linkProps.navigate}>
                   <Button
                     {...linkProps}
                     label={__(linkProps.label)}
+                    navigate={linkProps.route || linkProps.navigate}
                     icon={pulseLibrary && linkProps.icon === ICONS.LIBRARY ? ICONS.PURCHASED : linkProps.icon}
                     className={classnames('navigation-link', {
                       'navigation-link--pulse': linkProps.icon === ICONS.LIBRARY && pulseLibrary,
@@ -270,14 +293,14 @@ function SideNavigation(props: Props) {
                     })}
                     activeClass="navigation-link--active"
                   />
-                  {linkProps.extra}
+                  {linkProps.extra && linkProps.extra}
                 </li>
               )
             )}
           </ul>
 
           {sidebarOpen && isPersonalized && subscriptions && subscriptions.length > 0 && (
-            <ul className="navigation__secondary navigation-links navigation-links--small">
+            <ul className="navigation__secondary navigation-links">
               {subscriptions.map(({ uri, channelName }, index) => (
                 <li key={uri} className="navigation-link__wrapper">
                   <Button
@@ -290,6 +313,7 @@ function SideNavigation(props: Props) {
               ))}
             </ul>
           )}
+          {sidebarOpen && helpLinks}
         </nav>
       )}
 
@@ -316,7 +340,7 @@ function SideNavigation(props: Props) {
                       })}
                       activeClass="navigation-link--active"
                     />
-                    {linkProps.extra}
+                    {linkProps.extra && linkProps.extra}
                   </li>
                 )
               )}
@@ -331,13 +355,13 @@ function SideNavigation(props: Props) {
                       className="navigation-link"
                       activeClass="navigation-link--active"
                     />
-                    {linkProps.extra}
+                    {linkProps.extra && linkProps.extra}
                   </li>
                 )
               )}
             </ul>
             {isPersonalized && subscriptions && subscriptions.length > 0 && (
-              <ul className="navigation__secondary navigation-links--small">
+              <ul className="navigation__secondary navigation-links">
                 {subscriptions.map(({ uri, channelName }, index) => (
                   <li key={uri} className="navigation-link__wrapper">
                     <Button
@@ -350,6 +374,7 @@ function SideNavigation(props: Props) {
                 ))}
               </ul>
             )}
+            {helpLinks}
           </nav>
           <div
             className={classnames('navigation__overlay', {

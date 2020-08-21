@@ -1,7 +1,9 @@
 // @flow
+import type { RowDataItem } from 'homepage';
 import * as ICONS from 'constants/icons';
 import * as PAGES from 'constants/pages';
 import { SITE_NAME } from 'config';
+import classnames from 'classnames';
 import React from 'react';
 import Page from 'component/page';
 import Button from 'component/button';
@@ -12,13 +14,6 @@ type Props = {
   authenticated: boolean,
   followedTags: Array<Tag>,
   subscribedChannels: Array<Subscription>,
-};
-
-type RowDataItem = {
-  title: string,
-  link?: string,
-  help?: any,
-  options?: {},
 };
 
 function HomePage(props: Props) {
@@ -52,21 +47,27 @@ function HomePage(props: Props) {
           </p>
         </div>
       )}
-      {rowData.map(({ title, link, help, options = {} }) => (
-        <div key={title} className="claim-grid__wrapper">
+      {rowData.map(({ label, route, navigate, help, options = {}, hideRepostLabel = false }, index) => (
+        <div key={label} className="claim-grid__wrapper">
           <h1 className="section__actions">
-            <span className="claim-grid__title">{title}</span>
+            <span
+              className={classnames('claim-grid__title', {
+                'claim-grid__title--first': index === 0,
+              })}
+            >
+              {label}
+            </span>
             {help}
           </h1>
 
           <ClaimTilesDiscover {...options} />
-          {link && (
+          {navigate && (
             <Button
               className="claim-grid__title--secondary"
               button="link"
-              navigate={link}
+              navigate={route || navigate}
               iconRight={ICONS.ARROW_RIGHT}
-              label={title}
+              label={__('View More')}
             />
           )}
         </div>

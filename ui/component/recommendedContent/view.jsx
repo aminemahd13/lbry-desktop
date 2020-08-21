@@ -1,5 +1,6 @@
 // @flow
 import { SHOW_ADS } from 'config';
+import { SEARCH_OPTIONS } from 'constants/search';
 import React from 'react';
 import ClaimList from 'component/claimList';
 import Ads from 'web/component/ads';
@@ -47,7 +48,13 @@ export default class RecommendedContent extends React.PureComponent<Props> {
     const { claim, search, mature } = this.props;
 
     if (claim && claim.value && claim.claim_id) {
-      const options: Options = { size: 20, related_to: claim.claim_id, isBackgroundSearch: true };
+      const options: Options = {
+        size: 20,
+        related_to: claim.claim_id,
+        isBackgroundSearch: true,
+        [SEARCH_OPTIONS.CLAIM_TYPE]: SEARCH_OPTIONS.INCLUDE_FILES,
+        [SEARCH_OPTIONS.MEDIA_VIDEO]: true,
+      };
       if (claim && !mature) {
         options['nsfw'] = false;
       }

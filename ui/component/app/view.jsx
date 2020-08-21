@@ -25,7 +25,12 @@ import OpenInAppLink from 'web/component/openInAppLink';
 import YoutubeWelcome from 'web/component/youtubeReferralWelcome';
 import NagDegradedPerformance from 'web/component/nag-degraded-performance';
 import NagDataCollection from 'web/component/nag-data-collection';
-
+import Header from 'component/header';
+import Card from 'component/common/card';
+import Button from 'component/button';
+import { Form, FormField } from 'component/common/form';
+import { ODYSEE_PASSWORD } from 'config';
+import { setCookie, getCookie } from 'util/saved-passwords';
 import {
   useDegradedPerformance,
   STATUS_OK,
@@ -49,7 +54,7 @@ type Props = {
   pageTitle: ?string,
   language: string,
   languages: Array<string>,
-  theme: string,
+  //   theme: string,
   user: ?{ id: string, has_verified_email: boolean, is_reward_approved: boolean },
   location: { pathname: string, hash: string, search: string },
   history: {
@@ -82,7 +87,7 @@ type Props = {
 
 function App(props: Props) {
   const {
-    theme,
+    // theme,
     user,
     fetchAccessToken,
     fetchChannelListMine,
@@ -104,6 +109,11 @@ function App(props: Props) {
     analyticsTagSync,
     isAuthenticated,
   } = props;
+
+  const [isVip, setIsVip] = React.useState(getCookie('odysee'));
+  const [vipError, setVipError] = React.useState(false);
+  const [password, setPassword] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState('');
 
   const appRef = useRef();
   const isEnhancedLayout = useKonamiListener();
@@ -203,10 +213,10 @@ function App(props: Props) {
     // @endif
   }, [appRef, fetchAccessToken, fetchChannelListMine]);
 
-  useEffect(() => {
-    // $FlowFixMe
-    document.documentElement.setAttribute('theme', theme);
-  }, [theme]);
+  //   useEffect(() => {
+  //     // $FlowFixMe
+  //     document.documentElement.setAttribute('theme', theme);
+  //   }, [theme]);
 
   useEffect(() => {
     if (!languages.includes(language)) {
@@ -279,6 +289,52 @@ function App(props: Props) {
   }
   // @endif
 
+  if (!isVip) {
+    return (
+      <div>
+        <Header authHeader hideCancel />
+        <div className="main--empty" style={{ maxWidth: '30rem', margin: 'auto', marginTop: '10rem' }}>
+          <Card
+            title={'Secret Password'}
+            actions={
+              <Form
+                className="vip-entry"
+                onSubmit={() => {
+                  setVipError(false);
+                  setIsSubmitting(true);
+                  setTimeout(() => {
+                    if (password === ODYSEE_PASSWORD) {
+                      setCookie('odysee', password);
+                      setIsVip(true);
+                      setIsSubmitting(false);
+                    } else {
+                      setVipError(true);
+                      setIsSubmitting(false);
+                    }
+                  }, 500);
+                }}
+              >
+                <FormField
+                  autoFocus
+                  style={{ textAlign: 'left' }}
+                  type="text"
+                  name="a"
+                  label="Password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+                <div className="section__actions">
+                  <Button label={isSubmitting ? 'Submitting...' : 'Submit'} type="submit" button="primary" />
+                  {vipError && <span className="error__text">The password you have entered is not correct.</span>}
+                </div>
+              </Form>
+            }
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={classnames(MAIN_WRAPPER_CLASS, {
@@ -316,11 +372,11 @@ function App(props: Props) {
 
           {/* @if TARGET='web' */}
           <YoutubeWelcome />
-          {!shouldHideNag && <OpenInAppLink uri={uri} />}
+          {false && !shouldHideNag && <OpenInAppLink uri={uri} />}
           {(lbryTvApiStatus === STATUS_DEGRADED || lbryTvApiStatus === STATUS_FAILING) && !shouldHideNag && (
             <NagDegradedPerformance onClose={() => setLbryTvApiStatus(STATUS_OK)} />
           )}
-          {lbryTvApiStatus === STATUS_OK && showAnalyticsNag && !shouldHideNag && (
+          {false && lbryTvApiStatus === STATUS_OK && showAnalyticsNag && !shouldHideNag && (
             <NagDataCollection onClose={handleAnalyticsDismiss} />
           )}
           {/* @endif */}

@@ -88,6 +88,21 @@
   }
 }
 
+.media__info-text--contracted {
+  margin-top: var(--spacing-m);
+  max-height: 5rem;
+  overflow-y: hidden;
+}
+
+.media__info-text--expanded {
+  margin-top: var(--spacing-m);
+  max-height: auto;
+}
+
+.media__info-expand {
+  margin-top: var(--spacing-s);
+}
+
 .media__actions {
   display: flex;
   flex-wrap: wrap;

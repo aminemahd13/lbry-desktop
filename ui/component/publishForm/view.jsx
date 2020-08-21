@@ -334,7 +334,6 @@ function PublishForm(props: Props) {
             help={__(
               "Add tags that are relevant to your content so those who're looking for it can find it more easily. If mature content, ensure it is tagged mature. Tag abuse and missing mature tags will not be tolerated."
             )}
-            placeholder={__('gaming, crypto')}
             onSelect={newTags => {
               const validatedTags = [];
               newTags.forEach(newTag => {

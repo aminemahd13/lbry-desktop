@@ -23,15 +23,15 @@ type Price = {
 
 type SetDaemonSettingArg = boolean | string | number;
 
-type DarkModeTimes = {
-  from: { hour: string, min: string, formattedTime: string },
-  to: { hour: string, min: string, formattedTime: string },
-};
+// type DarkModeTimes = {
+//   from: { hour: string, min: string, formattedTime: string },
+//   to: { hour: string, min: string, formattedTime: string },
+// };
 
-type OptionTimes = {
-  fromTo: string,
-  time: string,
-};
+// type OptionTimes = {
+//   fromTo: string,
+//   time: string,
+// };
 
 type DaemonSettings = {
   download_dir: string,
@@ -50,9 +50,9 @@ type Props = {
   isAuthenticated: boolean,
   instantPurchaseEnabled: boolean,
   instantPurchaseMax: Price,
-  currentTheme: string,
-  themes: Array<string>,
-  automaticDarkModeEnabled: boolean,
+  //   currentTheme: string,
+  //   themes: Array<string>,
+  //   automaticDarkModeEnabled: boolean,
   autoplay: boolean,
   updateWalletStatus: () => void,
   walletEncrypted: boolean,
@@ -61,8 +61,8 @@ type Props = {
   floatingPlayer: boolean,
   hideReposts: ?boolean,
   clearPlayingUri: () => void,
-  darkModeTimes: DarkModeTimes,
-  setDarkTime: (string, {}) => void,
+  //   darkModeTimes: DarkModeTimes,
+  //   setDarkTime: (string, {}) => void,
   openModal: string => void,
   language?: string,
   syncEnabled: boolean,
@@ -82,9 +82,9 @@ class SettingsPage extends React.PureComponent<Props, State> {
       storedPassword: false,
     };
 
-    (this: any).onThemeChange = this.onThemeChange.bind(this);
-    (this: any).onAutomaticDarkModeChange = this.onAutomaticDarkModeChange.bind(this);
-    (this: any).onChangeTime = this.onChangeTime.bind(this);
+    // (this: any).onThemeChange = this.onThemeChange.bind(this);
+    // (this: any).onAutomaticDarkModeChange = this.onAutomaticDarkModeChange.bind(this);
+    // (this: any).onChangeTime = this.onChangeTime.bind(this);
     (this: any).onConfirmForgetPassword = this.onConfirmForgetPassword.bind(this);
   }
 
@@ -101,19 +101,19 @@ class SettingsPage extends React.PureComponent<Props, State> {
     }
   }
 
-  onThemeChange(event: SyntheticInputEvent<*>) {
-    const { value } = event.target;
+  //   onThemeChange(event: SyntheticInputEvent<*>) {
+  //     const { value } = event.target;
 
-    if (value === 'dark') {
-      this.onAutomaticDarkModeChange(false);
-    }
+  //     if (value === 'dark') {
+  //       this.onAutomaticDarkModeChange(false);
+  //     }
 
-    this.props.setClientSetting(SETTINGS.THEME, value);
-  }
+  //     this.props.setClientSetting(SETTINGS.THEME, value);
+  //   }
 
-  onAutomaticDarkModeChange(value: boolean) {
-    this.props.setClientSetting(SETTINGS.AUTOMATIC_DARK_MODE_ENABLED, value);
-  }
+  //   onAutomaticDarkModeChange(value: boolean) {
+  //     this.props.setClientSetting(SETTINGS.AUTOMATIC_DARK_MODE_ENABLED, value);
+  //   }
 
   onConfirmForgetPassword() {
     const { confirmForgetPassword } = this.props;
@@ -124,19 +124,19 @@ class SettingsPage extends React.PureComponent<Props, State> {
     });
   }
 
-  onChangeTime(event: SyntheticInputEvent<*>, options: OptionTimes) {
-    const { value } = event.target;
+  //   onChangeTime(event: SyntheticInputEvent<*>, options: OptionTimes) {
+  //     const { value } = event.target;
 
-    this.props.setDarkTime(value, options);
-  }
+  //     this.props.setDarkTime(value, options);
+  //   }
 
-  to12Hour(time: string) {
-    const now = new Date(0, 0, 0, Number(time));
+  //   to12Hour(time: string) {
+  //     const now = new Date(0, 0, 0, Number(time));
 
-    const hour = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit' });
+  //     const hour = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit' });
 
-    return hour;
-  }
+  //     return hour;
+  //   }
 
   setDaemonSetting(name: string, value: ?SetDaemonSettingArg): void {
     this.props.setDaemonSetting(name, value);
@@ -152,9 +152,9 @@ class SettingsPage extends React.PureComponent<Props, State> {
       allowAnalytics,
       showNsfw,
       isAuthenticated,
-      currentTheme,
-      themes,
-      automaticDarkModeEnabled,
+      //   currentTheme,
+      //   themes,
+      //   automaticDarkModeEnabled,
       autoplay,
       walletEncrypted,
       // autoDownload,
@@ -165,14 +165,14 @@ class SettingsPage extends React.PureComponent<Props, State> {
       floatingPlayer,
       hideReposts,
       clearPlayingUri,
-      darkModeTimes,
+      //   darkModeTimes,
       clearCache,
       openModal,
     } = this.props;
     const { storedPassword } = this.state;
     const noDaemonSettings = !daemonSettings || Object.keys(daemonSettings).length === 0;
-    const startHours = ['18', '19', '20', '21'];
-    const endHours = ['5', '6', '7', '8'];
+    // const startHours = ['18', '19', '20', '21'];
+    // const endHours = ['5', '6', '7', '8'];
 
     return (
       <Page
@@ -289,7 +289,7 @@ class SettingsPage extends React.PureComponent<Props, State> {
               }
             />
 
-            <Card
+            {/* <Card
               title={__('Appearance')}
               actions={
                 <React.Fragment>
@@ -350,7 +350,7 @@ class SettingsPage extends React.PureComponent<Props, State> {
                   </fieldset-section>
                 </React.Fragment>
               }
-            />
+            /> */}
 
             {/* @if TARGET='app' */}
             <Card

@@ -1,6 +1,6 @@
 // @flow
 import * as ICONS from 'constants/icons';
-import { SETTINGS } from 'lbry-redux';
+// import { SETTINGS } from 'lbry-redux';
 import * as PAGES from 'constants/pages';
 import React from 'react';
 import { withRouter } from 'react-router';
@@ -12,7 +12,7 @@ import Icon from 'component/common/icon';
 import { Menu, MenuList, MenuButton, MenuItem } from '@reach/menu-button';
 import Tooltip from 'component/common/tooltip';
 import NavigationButton from 'component/navigationButton';
-import { LOGO_TITLE } from 'config';
+// import { LOGO_TITLE } from 'config';
 import { useIsMobile } from 'effects/use-screensize';
 import NotificationBubble from 'component/notificationBubble';
 import NotificationHeaderButton from 'component/notificationHeaderButton';
@@ -21,6 +21,8 @@ import NotificationHeaderButton from 'component/notificationHeaderButton';
 import { remote } from 'electron';
 import { IS_MAC } from 'component/app/view';
 // @endif
+import OdyseeLogo from './odysee_logo.png';
+import OdyseeLogoWithText from './odysee.png';
 
 type Props = {
   balance: string,
@@ -60,15 +62,16 @@ type Props = {
   sidebarOpen: boolean,
   setSidebarOpen: boolean => void,
   isAbsoluteSideNavHidden: boolean,
+  hideCancel: boolean,
 };
 
 const Header = (props: Props) => {
   const {
     roundedBalance,
     history,
-    setClientSetting,
-    currentTheme,
-    automaticDarkModeEnabled,
+    // setClientSetting,
+    // currentTheme,
+    // automaticDarkModeEnabled,
     hideBalance,
     email,
     authenticated,
@@ -80,10 +83,11 @@ const Header = (props: Props) => {
     clearPasswordEntry,
     emailToVerify,
     backout,
-    syncSettings,
+    // syncSettings,
     sidebarOpen,
     setSidebarOpen,
     isAbsoluteSideNavHidden,
+    hideCancel,
   } = props;
   const isMobile = useIsMobile();
   // on the verify page don't let anyone escape other than by closing the tab to keep session data consistent
@@ -143,18 +147,18 @@ const Header = (props: Props) => {
     }
   }, [hasBackout]);
 
-  function handleThemeToggle() {
-    if (automaticDarkModeEnabled) {
-      setClientSetting(SETTINGS.AUTOMATIC_DARK_MODE_ENABLED, false);
-    }
+  //   function handleThemeToggle() {
+  //     if (automaticDarkModeEnabled) {
+  //       setClientSetting(SETTINGS.AUTOMATIC_DARK_MODE_ENABLED, false);
+  //     }
 
-    if (currentTheme === 'dark') {
-      setClientSetting(SETTINGS.THEME, 'light');
-    } else {
-      setClientSetting(SETTINGS.THEME, 'dark');
-    }
-    syncSettings();
-  }
+  //     if (currentTheme === 'dark') {
+  //       setClientSetting(SETTINGS.THEME, 'light');
+  //     } else {
+  //       setClientSetting(SETTINGS.THEME, 'dark');
+  //     }
+  //     syncSettings();
+  //   }
 
   function getWalletTitle() {
     return hideBalance || Number(roundedBalance) === 0 ? (
@@ -218,6 +222,17 @@ const Header = (props: Props) => {
               )}
               <Button
                 className="header__navigation-item header__navigation-item--lbry header__navigation-item--button-mobile"
+                onClick={() => {
+                  if (history.location.pathname === '/') window.location.reload();
+                }}
+                {...homeButtonNavigationProps}
+              >
+                <img src={OdyseeLogo} className="header__odysee mobile-only" />
+                <img src={OdyseeLogoWithText} className="header__odysee mobile-hidden" />
+              </Button>
+
+              {/* <Button
+                className="header__navigation-item header__navigation-item--lbry header__navigation-item--button-mobile"
                 // @if TARGET='app'
                 label={'LBRY'}
                 // @endif
@@ -234,7 +249,7 @@ const Header = (props: Props) => {
                 }}
                 // @endif
                 {...homeButtonNavigationProps}
-              />
+              /> */}
 
               {!authHeader && (
                 <div className="header__center">
@@ -302,14 +317,14 @@ const Header = (props: Props) => {
                           <Icon aria-hidden icon={ICONS.ANALYTICS} />
                           {__('Creator Analytics')}
                         </MenuItem>
-                        <MenuItem className="menu__link" onSelect={() => history.push(`/$/${PAGES.REWARDS}`)}>
+                        {/* <MenuLink className="menu__link" as="a" onSelect={() => history.push(`/$/${PAGES.REWARDS}`)}>
                           <Icon aria-hidden icon={ICONS.REWARDS} />
                           {__('Rewards')}
                         </MenuItem>
                         <MenuItem className="menu__link" onSelect={() => history.push(`/$/${PAGES.INVITE}`)}>
                           <Icon aria-hidden icon={ICONS.INVITE} />
                           {__('Invites')}
-                        </MenuItem>
+                        </MenuLink> */}
 
                         {authenticated ? (
                           <MenuItem onSelect={IS_WEB ? signOut : openSignOutModal}>
@@ -349,10 +364,10 @@ const Header = (props: Props) => {
                           <Icon aria-hidden icon={ICONS.HELP} />
                           {__('Help')}
                         </MenuItem>
-                        <MenuItem className="menu__link" onSelect={handleThemeToggle}>
+                        {/* <MenuItem className="menu__link" onSelect={handleThemeToggle}>
                           <Icon icon={currentTheme === 'light' ? ICONS.DARK : ICONS.LIGHT} />
                           {currentTheme === 'light' ? __('Dark') : __('Light')}
-                        </MenuItem>
+                        </MenuItem> */}
                       </MenuList>
                     </Menu>
                   </div>
@@ -364,6 +379,7 @@ const Header = (props: Props) => {
               <div className={classnames('header__menu', { 'header__menu--with-balance': !IS_WEB || authenticated })}>
                 {(!IS_WEB || authenticated) && (
                   <Button
+                    button="link"
                     aria-label={__('Your wallet')}
                     navigate={`/$/${PAGES.WALLET}`}
                     className="header__navigation-item menu__title header__navigation-item--balance"
@@ -378,13 +394,19 @@ const Header = (props: Props) => {
 
                 {IS_WEB && !authenticated && (
                   <div className="header__auth-buttons">
-                    <Button navigate={`/$/${PAGES.AUTH_SIGNIN}`} button="link" label={__('Sign In')} />
+                    <Button
+                      navigate={`/$/${PAGES.AUTH_SIGNIN}`}
+                      button="link"
+                      label={__('Sign In')}
+                      className="mobile-hidden"
+                    />
                     <Button navigate={`/$/${PAGES.AUTH}`} button="primary" label={__('Sign Up')} />
                   </div>
                 )}
               </div>
             ) : (
-              !isVerifyPage && (
+              !isVerifyPage &&
+              !hideCancel && (
                 <div className="header__menu">
                   {/* Add an empty span here so we can use the same style as above */}
                   {/* This pushes the close button to the right side */}

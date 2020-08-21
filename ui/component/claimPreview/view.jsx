@@ -22,6 +22,7 @@ import ClaimRepostAuthor from 'component/claimRepostAuthor';
 import FileDownloadLink from 'component/fileDownloadLink';
 import AbandonedChannelPreview from 'component/abandonedChannelPreview';
 import PublishPending from 'component/publishPending';
+import FileActions from 'component/fileActions';
 
 type Props = {
   uri: string,
@@ -59,6 +60,7 @@ type Props = {
   customShouldHide?: Claim => boolean,
   showUnresolvedClaim?: boolean,
   includeSupportAction?: boolean,
+  includeFileActions: boolean,
 };
 
 const ClaimPreview = forwardRef<any, {}>((props: Props, ref: any) => {
@@ -91,6 +93,7 @@ const ClaimPreview = forwardRef<any, {}>((props: Props, ref: any) => {
     customShouldHide,
     showUnresolvedClaim,
     includeSupportAction,
+    includeFileActions,
   } = props;
   const shouldFetch =
     claim === undefined || (claim !== null && claim.value_type === 'channel' && isEmpty(claim.meta) && !pending);
@@ -290,6 +293,8 @@ const ClaimPreview = forwardRef<any, {}>((props: Props, ref: any) => {
                     actions
                   ) : (
                     <div className="claim-preview__primary-actions">
+                      {includeFileActions && <FileActions uri={uri} />}
+
                       {isChannel && !channelIsBlocked && !claimIsMine && (
                         <SubscribeButton uri={uri.startsWith('lbry://') ? uri : `lbry://${uri}`} />
                       )}

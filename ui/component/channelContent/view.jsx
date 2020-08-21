@@ -126,6 +126,7 @@ function ChannelContent(props: Props) {
           channelIds={[claim.claim_id]}
           defaultOrderBy={CS.ORDER_BY_NEW}
           pageSize={defaultPageSize}
+          streamType={CS.CONTENT_ALL}
           infiniteScroll={defaultInfiniteScroll}
           injectedItem={SHOW_ADS && !isAuthenticated && IS_WEB && <Ads type="video" />}
           meta={

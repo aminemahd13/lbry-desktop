@@ -32,6 +32,7 @@
   --color-button-alt-text: #e2e9f0;
   --color-header-button: #434b54;
   --color-button-border: var(--color-gray-5);
+  --color-button-toggle-bg-hover: var(--color-primary-alt);
 
   // Color
   --color-focus: #2d69a5;
@@ -77,6 +78,7 @@
   --color-input-toggle: var(--color-primary);
   --color-input-toggle-bg: var(--color-input-bg);
   --color-input-toggle-bg-hover: var(--color-secondary);
+  --color-input-bg-selected: var(--color-primary-alt);
 
   // Menu
   --color-menu-background: var(--color-header-background);
